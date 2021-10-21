@@ -1,0 +1,64 @@
+replicaCount: 1
+environment: dev
+namespace: chester
+team: devops
+image:
+  name: replace-me
+  pullSecret: replace-me
+  pullPolicy: replace-me
+resources:
+  requests:
+    memory: "300Mi"
+    cpu: "100m"
+  limits:
+    memory: "600Mi"
+    cpu: "200m"
+
+service:
+  omitClusterIP: "true"
+  type: NodePort
+  port: 80
+  name: chester-api
+  targetPort: 8080
+  healthCheck: "/healthcheck"
+
+oauthsecret: replace-me
+
+ingress:
+  enabled: true
+  annotations:
+    noop: "abcdef"
+    kubernetes.io/ingress.global-static-ip-name: "replace-me"
+    kubernetes.io/ingress.allow-http: "true"
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/tls-acme: "true"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    networking.gke.io/managed-certificates: "replace-me"
+  hosts:
+    - replace-me
+
+secret:
+  name: chester-secrets
+
+c_env:
+  env: dev
+  PROJECT_ID: replace-me
+  PUBSUB_TOPIC: replace-me
+  PUBSUB_SUBSCRIPTION: replace-me
+  SQLADMIN_CREDS: /etc/serviceAccount/sqladmin_key
+  PUBSUB_CREDS: /etc/serviceAccount/topic_key
+  DATASTORE_CREDS: /etc/serviceAccount/datastore_key
+  KMS_CREDS: /etc/serviceAccount/kms_key
+  AUTH_USER: replace-me
+  AUTH_PASS: replace-me
+  PROJECT_NUMBER: replace-me
+  BACKEND_SERVICE_ID: replace-me
+  BASIC_AUTH_ENABLED: replace-me
+  ALLOWED_USERS: replace-me
+  KMS_KEY_NAME: replace-me
+  KMS_KEY_RING: replace-me
+  KMS_KEY_LOCATION: replace-me
+  KMS_KEY_VERSION: replace-me
+
+
+

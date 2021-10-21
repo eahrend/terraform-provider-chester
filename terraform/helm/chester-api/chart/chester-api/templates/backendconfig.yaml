@@ -1,0 +1,12 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: {{ template "chester-api.fullname" . }}-backendconfig
+  namespace: {{ .Values.namespace }}
+spec:
+  iap:
+    enabled: true
+    oauthclientCredentials:
+      secretName: {{ .Values.oauthsecret }}
+{{- end }}

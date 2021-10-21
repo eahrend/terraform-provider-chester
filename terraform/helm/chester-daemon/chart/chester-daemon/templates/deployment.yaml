@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ template "chester.fullname" . }}
+  labels:
+    app: {{ template "chester.name" . }}
+    chart: {{ template "chester.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    environment: {{ .Values.environment }}
+    team: {{ .Values.team }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "chester.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "chester.name" . }}
+        release: {{ .Release.Name }}
+        environment: {{ .Values.c_env.env }}
+    spec:
+      volumes:
+        - name: service-account
+          secret:
+            secretName: {{ .Values.secret.name }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      containers:
+        - name: {{ .Chart.Name }}
+          volumeMounts:
+            - name: service-account
+              mountPath: /etc/serviceAccount
+          image: {{ .Values.image.name }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          {{- range $key, $value := .Values.c_env }}
+            - name: {{ $key | upper }}
+              value: {{ $value | quote }}
+          {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

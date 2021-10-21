@@ -1,0 +1,40 @@
+replicaCount: 4
+maxReplicaCount: 8
+environment: dev
+team: devops
+namespace: proxysql
+configmap:
+  name: proxysql-configmap-proxysql-chester
+image:
+  name: severalnines/proxysql:1.4.12
+  pullPolicy: IfNotPresent
+
+targetCPUUtilization: 60
+targetMemoryUtilization: 60
+
+deployment:
+  name: proxysql-chester-test
+
+# Dealing with namespace creation stuff
+namespaceEnabled: true
+
+resources:
+  requests:
+    memory: 400M
+    cpu: 0.5
+  limits:
+    memory: 800M
+    cpu: 2
+
+service:
+  type: NodePort
+  proxysqlmysqlport: 6033
+  name: proxysql-svc-chester-test
+  proxysqladminport: 6032
+
+
+sql_writer: replace_me
+sql_reader_one: replace_me
+sql_reader_two: replace_me
+sql_username: replace_me
+sql_password: replace_me

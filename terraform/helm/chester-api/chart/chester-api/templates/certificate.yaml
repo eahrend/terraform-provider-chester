@@ -1,0 +1,10 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: {{ index .Values "ingress" "annotations" "networking.gke.io/managed-certificates" }}
+  namespace: {{ .Values.namespace }}
+spec:
+  domains:
+    {{- range $key, $value := .Values.ingress.hosts }}
+    - {{ $value }}
+    {{- end }}

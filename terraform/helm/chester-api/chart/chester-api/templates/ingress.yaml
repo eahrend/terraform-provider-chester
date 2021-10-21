@@ -1,0 +1,28 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+{{- if .Values.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.ingress.annotations | indent 4 }}{{- end }}
+  name: {{ template "chester-api.fullname" . }}-ing
+  namespace: {{ .Values.namespace }}
+spec:
+  backend:
+    serviceName: {{ $.Values.service.name }}
+    servicePort: {{ $.Values.service.port }}
+  rules:
+  {{- range $key, $value := .Values.ingress.hosts }}
+  - host: {{ $value }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ $.Values.service.name }}
+          servicePort: {{ $.Values.service.port }}
+      - path: /*
+        backend:
+          serviceName: {{ $.Values.service.name }}
+          servicePort: {{ $.Values.service.port }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,38 @@
+replicaCount: 1
+environment: dev
+namespace: chester
+team: devops
+image:
+  name: replace-me
+  pullSecret: replace-me
+  pullPolicy: replace-me
+
+
+resources:
+  requests:
+    memory: "300Mi"
+    cpu: "100m"
+  limits:
+    memory: "600Mi"
+    cpu: "200m"
+
+
+
+
+
+
+secret:
+  name: replace-me
+
+c_env:
+  env: dev
+  PROJECT_ID: replace-me
+  PUBSUB_TOPIC: replace-me
+  PUBSUB_SUBSCRIPTION: replace-me
+  SQLADMIN_CREDS: /etc/serviceAccount/sqladmin_key
+  PUBSUB_CREDS: /etc/serviceAccount/subscription_key
+  DATASTORE_CREDS: /etc/serviceAccount/datastore_key
+  KMS_CREDS: /etc/serviceAccount/kms_key
+  IN_CLUSTER: "true"
+  NETWORK_PROJECT_ID: replace-me
+  NETWORK_NAME: replace-me

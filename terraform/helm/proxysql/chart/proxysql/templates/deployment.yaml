@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ .Values.deployment.name | lower  }}
+  labels:
+    app: {{ template "proxysql.name" . }}
+    chart: {{ template "proxysql.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    environment: {{ .Values.environment }}
+    team: {{ .Values.team }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "proxysql.name" . }}
+      release: {{ .Release.Name }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ template "proxysql.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      restartPolicy: Always
+      containers:
+        - image: {{ .Values.image.name }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: proxysql
+          volumeMounts:
+            - name: proxysql-config
+              mountPath: /etc/proxysql.cnf
+              subPath: proxysql.cnf
+          ports:
+            - containerPort: {{ .Values.service.proxysqlmysqlport }}
+              name: proxysql-mysql
+            - containerPort: {{ .Values.service.proxysqladminport }}
+              name: proxysql-admin
+      volumes:
+        - name: proxysql-config
+          configMap:
+            name: {{ .Values.configmap.name | lower }}
